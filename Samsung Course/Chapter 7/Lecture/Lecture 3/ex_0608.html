@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>ex_0607</title>
+<title>ex_0608</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13077,7 +13077,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Coding-Exercise-#0607">Coding Exercise #0607<a class="anchor-link" href="#Coding-Exercise-#0607">&#182;</a></h2>
+<h2 id="Coding-Exercise-#0608">Coding Exercise #0608<a class="anchor-link" href="#Coding-Exercise-#0608">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -13086,23 +13086,30 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">nltk</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Install WordCloud once.</span>
+<span class="c1"># !pip install wordcloud</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
 <span class="kn">import</span> <span class="nn">re</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># You should download the NLTK data once.</span>
-<span class="c1"># It can be a bit time consuming.</span>
-<span class="c1"># nltk.download()</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>                         <span class="c1"># From the Pillow library import the Image module.</span>
+<span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="kn">import</span> <span class="n">WordNetLemmatizer</span>
+<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 
     </div>
@@ -13113,7 +13120,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="1.-More-about-the-NLTK-library:">1. More about the NLTK library:<a class="anchor-link" href="#1.-More-about-the-NLTK-library:">&#182;</a></h3>
+<h3 id="1.-Visualize-the-text-data-as-a-WordCloud:">1. Visualize the text data as a WordCloud:<a class="anchor-link" href="#1.-Visualize-the-text-data-as-a-WordCloud:">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13122,17 +13129,23 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#</span>
-<span class="c1">#  From the US president B. Obama&#39;s Nov-4th-2008 speech. </span>
-<span class="c1">#</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Go to the directory where the data file is located. </span>
+<span class="c1"># os.chdir(r&#39;~~&#39;)                # Please, replace the path with your own.   </span>
+</pre></div>
 
-<span class="n">paragraph</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;If there is anyone out there who still doubts that America is a place where all things are possible; who still wonders if the dream of our founders is alive in our time; who still questions the power of our democracy: Tonight is your answer.</span>
-<span class="s2">It&#39;s the answer told by lines that stretched around schools and churches in numbers this nation has never seen; by people who waited three hours and four hours, many for the very first time in their lives, because they believed that this time must be different; that their voices could be that difference. </span>
-<span class="s2">It&#39;s the answer spoken by young and old, rich and poor, Democrat and Republican, black, white, Hispanic, Asian, Native American, gay, straight, disabled and not disabled -- Americans who sent a message to the world that we have never been just a collection of individuals or a collection of Red States and Blue States: we are, and always will be, the United States of America!</span>
-<span class="s2">It&#39;s the answer that -- that led those who have been told for so long by so many to be cynical, and fearful, and doubtful about what we can achieve to put their hands on the arc of history and bend it once more toward the hope of a better day.</span>
-<span class="s2">It&#39;s been a long time coming, but tonight, because of what we did on this day, in this election, at this defining moment, change has come to America.</span>
-<span class="s2">A little bit earlier this evening, I received an extraordinarily gracious call from Senator McCain. Senator McCain fought long and hard in this campaign, and he&#39;s fought even longer and harder for the country that he loves. He has endured sacrifices for America that most of us cannot begin to imagine. We are better off for the service rendered by this brave and selfless leader. I congratulate him; I congratulate Governor Palin for all that they&#39;ve achieved, and I look forward to working with them to renew this nation&#39;s promise in the months ahead.</span>
-<span class="s2">I want to thank my partner in this journey, a man who campaigned from his heart and spoke for the men and women he grew up with on the streets of Scranton and rode with on the train home to Delaware, the Vice President-elect of the United States, Joe Biden. &quot;&quot;&quot;</span>                  
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./book_three_little_pigs.txt&quot;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;UTF8&#39;</span><span class="p">)</span>
+<span class="n">my_book</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13143,7 +13156,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="1.1.-Tokenization-and-pre-processing:">1.1. Tokenization and pre-processing:<a class="anchor-link" href="#1.1.-Tokenization-and-pre-processing:">&#182;</a></h4>
+<h4 id="1.1.-Pre-processing:">1.1. Pre-processing:<a class="anchor-link" href="#1.1.-Pre-processing:">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13152,14 +13165,31 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Tokenize into sentences.</span>
-<span class="n">sentences</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">sent_tokenize</span><span class="p">(</span><span class="n">paragraph</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)):</span>
-    <span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\W&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>            <span class="c1"># Substitute the non-alphanumeric characters with space. </span>
-    <span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>           <span class="c1"># Remove the excess of white spaces.</span>
-    <span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s$&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>            <span class="c1"># Remove the space at the end of a sentence.</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n_min</span> <span class="o">=</span> <span class="mi">4</span>                                                           <span class="c1"># Minimum number of characters. </span>
+<span class="n">corpus</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">lemmatizer</span> <span class="o">=</span> <span class="n">WordNetLemmatizer</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">a_line</span> <span class="ow">in</span> <span class="n">my_book</span><span class="p">:</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\W&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">a_line</span><span class="p">)</span>                                <span class="c1"># Substitute the non-alphanumerics character by space.</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d+&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">pre</span><span class="p">)</span>                                    <span class="c1"># Remove numbers.</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">pre</span><span class="p">)</span>                                   <span class="c1"># Tokenize into words.</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pre</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">n_min</span><span class="p">]</span>                        <span class="c1"># Minimum length.</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pre</span><span class="p">]</span>                                  <span class="c1"># Convert into the lowercase.</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pre</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">)]</span>   <span class="c1"># Remove stopwords.</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="p">[</span><span class="n">lemmatizer</span><span class="o">.</span><span class="n">lemmatize</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pre</span><span class="p">]</span>                    <span class="c1"># Lemmatize.</span>
+    <span class="n">corpus</span> <span class="o">+=</span> <span class="n">pre</span>                                                   <span class="c1"># Back to the corpus.</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13170,7 +13200,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="1.2.-Removal-of-the-stop-words:">1.2. Removal of the stop words:<a class="anchor-link" href="#1.2.-Removal-of-the-stop-words:">&#182;</a></h4>
+<h4 id="1.2.-Generate-a-basic-wordcloud:">1.2. Generate a basic wordcloud:<a class="anchor-link" href="#1.2.-Generate-a-basic-wordcloud:">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13179,7 +13209,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># WordCloud requires that the imput data be a single long string.</span>
+<span class="n">a_long_sentence</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13192,10 +13223,9 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)):</span>
-    <span class="n">words</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>                                   <span class="c1"># Tokenize into words.</span>
-    <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">words</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">)]</span>         <span class="c1"># Remove the stop words.</span>
-    <span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>                                             <span class="c1"># Rejoin as a sentence.</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">wc</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">background_color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">max_words</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>              <span class="c1"># Customize the output.</span>
+<span class="n">wc</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">a_long_sentence</span><span class="p">)</span>
+<span class="c1"># wc.words_                                                          # Check for the top ranking words.                                                         </span>
 </pre></div>
 
     </div>
@@ -13208,7 +13238,10 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wc</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>                                    <span class="c1"># Turn off the axes.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13219,7 +13252,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="1.3.-POS-tagging:">1.3. POS tagging:<a class="anchor-link" href="#1.3.-POS-tagging:">&#182;</a></h4>
+<h4 id="1.3.-Generate-wordcloud-using-a-mask:">1.3. Generate wordcloud using a mask:<a class="anchor-link" href="#1.3.-Generate-wordcloud-using-a-mask:">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13228,8 +13261,12 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Test sentence.</span>
-<span class="n">my_sentence</span> <span class="o">=</span> <span class="s2">&quot;The Colosseum was built by the emperor Vespassian&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Pick a background mask.</span>
+<span class="c1">#img = Image.open(&#39;background_1.png&#39;)                    # Elipse.</span>
+<span class="c1">#img = Image.open(&#39;background_2.png&#39;)                   # Speech bubble.</span>
+<span class="c1">#img = Image.open(&#39;background_3.png&#39;)                    # Heart.</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;background_4.png&#39;</span><span class="p">)</span>                    <span class="c1"># Circle.</span>
+<span class="n">back_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13242,11 +13279,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Simple pre-processing.</span>
-<span class="n">my_words</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">my_sentence</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">my_words</span><span class="p">)):</span>
-    <span class="n">my_words</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">my_words</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-<span class="n">my_words</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">wc</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">background_color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">max_words</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">back_mask</span><span class="p">)</span>            <span class="c1"># Customize the output. </span>
+<span class="n">wc</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">a_long_sentence</span><span class="p">)</span> 
 </pre></div>
 
     </div>
@@ -13259,28 +13293,11 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># POS tagging.</span>
-<span class="c1"># OUTPUT: A list of tuples.</span>
-<span class="n">my_words_tagged</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">pos_tag</span><span class="p">(</span><span class="n">my_words</span><span class="p">)</span>
-<span class="n">my_words_tagged</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Join the words + POS as a sentence.</span>
-<span class="n">my_words_tagged2</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">tw</span> <span class="ow">in</span> <span class="n">my_words_tagged</span><span class="p">:</span>
-    <span class="n">my_words_tagged2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">tw</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
-<span class="n">my_sentence_tagged</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">my_words_tagged2</span><span class="p">)</span>
-<span class="n">my_sentence_tagged</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wc</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>                                    <span class="c1"># Turn off the axes.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;out.png&quot;</span><span class="p">)</span>                             <span class="c1"># Save to an external file.  </span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
     </div>
