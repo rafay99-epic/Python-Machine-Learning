@@ -108,6 +108,10 @@ In this section there is a machine learning Projects and following are the model
 
 The following machine learning Model are being used for the detection of hate speech detection. the reference paper and the dataset are in the repo.
 
+# Exercise & Quiz:
+
+In this repo you will also find some more python questions, Exercises and some Quiz for practice as well. You will find the Exercises and Quiz in the Lecture folder.
+
 # Contact Info:
 
 For any help leave a question in a issue section. or email the Author:
